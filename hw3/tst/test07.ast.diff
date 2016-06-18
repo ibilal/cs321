@@ -1,0 +1,8 @@
+8,10c8,10
+<    Assign i (Binop + (Binop + (Unop - (Unop - 3)) (Binop * (Binop / (Binop * 5 4) 2) (ArrayElm a 1))) (Binop * null 2))
+<    Print ()
+<    Print ()
+---
+>    Assign i (Binop + (Binop + (Unop - (Unop - 3)) (Binop * (Binop / (Binop * 5 4) 2) (ArrayElm a 1))) (Binop * i 2))
+>    Print b
+>    Print i

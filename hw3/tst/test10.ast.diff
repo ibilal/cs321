@@ -1,0 +1,12 @@
+4c4
+<   VarDecl IntType j ()
+---
+>   VarDecl IntType j i
+8,10c8,10
+<    Print ()
+<    Print ()
+<    Print ()
+---
+>    Print (Field x i) 
+>    Print (Field x j) 
+>    Print (Field x k) 

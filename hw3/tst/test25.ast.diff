@@ -1,0 +1,4 @@
+12c12
+<    Return (Binop + (Binop + null null) null)
+---
+>    Return (Binop + (Binop + i j) k)

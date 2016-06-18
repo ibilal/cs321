@@ -1,0 +1,10 @@
+7,8c7,8
+<    Assign A null
+<    Print ()
+---
+>    Assign A (Field a A) 
+>    Print A
+12c12
+<    Return ()
+---
+>    Return i

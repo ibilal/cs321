@@ -1,0 +1,69 @@
+// This is supporting software for CS321/CS322 Compilers and Language Design.
+// Copyright (c) Portland State University.
+//---------------------------------------------------------------------------
+// For CS321 F'15 (J. Li).
+//
+
+// An LL(2) Grammar for the miniJava Language.
+//
+
+Program    -> {ClassDecl}
+
+ClassDecl  -> "class" <ID> ["extends" <ID>] "{" {VarDecl} {MethodDecl} "}"
+
+MethodDecl -> "public" ( ExtType <ID> "(" [Param {"," Param}] ")" 
+                       | "static" "void" "main" "(" "String" "[" "]" <ID> ")" )
+                "{" {VarDecl} {Stmt} "}"
+
+Param      -> Type <ID> 
+
+VarDecl    -> Type <ID> ["=" InitExpr] ";"
+
+ExtType    -> Type | "void"
+
+Type       -> BasicType ["[" "]"] | <ID>
+
+BasicType  -> "int" | "double" | "boolean"
+
+Stmt       -> "{" {Stmt} "}"
+           |  ExtId ( ["[" Expr "]"] "=" InitExpr ";"
+                    | "(" [Args] ")" ";" )
+           |  "if" "(" Expr ")" Stmt ["else" Stmt]
+           |  "while" "(" Expr ")" Stmt
+           |  "System" "." "out" "." "println" "(" [PrArg] ")" ";"
+           |  "return" [Expr] ";"
+
+Args       -> Expr {"," Expr}
+
+PrArg      -> Expr | <STRLIT>
+
+InitExpr   -> "new" ( BasicType "[" <INTLIT> "]" 
+                    | <ID> "(" ")" )
+           |  Expr 
+
+Expr       -> AndExpr {"||" AndExpr}
+
+AndExpr    -> RelExpr {"&&" RelExpr}
+
+RelExpr    -> ArithExpr {RelOp ArithExpr}
+
+ArithExpr  -> Term {("+"|"-") Term}
+
+Term       -> Factor {("*"|"/") Factor}
+
+Factor     -> UnOp Factor 
+           |  "(" Expr ")" 
+           |  ExtId ( ["[" Expr "]"]
+                    | "(" [Args] ")" )
+           |  Literal
+
+Literal    -> <INTLIT>
+           |  <DBLLIT> 
+           |  "true"
+           |  "false"
+
+ExtId      -> ["This" "."] <ID> {"." <ID>} 
+
+RelOp      -> "==" | "!=" | "<" | "<=" | ">" | ">=" 
+
+UnOp       -> "-" | "!"

@@ -1,0 +1,3 @@
+# AST Program
+ClassDecl Test 
+  MethodDecl void main ()

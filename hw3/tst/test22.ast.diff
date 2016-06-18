@@ -1,0 +1,8 @@
+5c5
+<    Print (Binop + null null)
+---
+>    Print (Binop + (Field b i)  (Field b j) )
+8c8
+<   VarDecl IntType j (Binop + null 2)
+---
+>   VarDecl IntType j (Binop + i 2)

@@ -1,0 +1,3 @@
+  MethodDecl void go ((Param IntType i) )
+   Print i
+

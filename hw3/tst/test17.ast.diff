@@ -1,0 +1,14 @@
+8,9c8,9
+<    Print ()
+<    Print ()
+---
+>    Print i
+>    Print j
+12c12
+<    Return ()
+---
+>    Return i
+17c17
+<    Return (Binop + null 1)
+---
+>    Return (Binop + i 1)

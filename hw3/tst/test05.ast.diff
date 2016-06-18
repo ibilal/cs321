@@ -1,0 +1,12 @@
+9,11c9,11
+<    Assign b (Unop ! null)
+<    Assign c (Binop || (Binop && null null) null)
+<    If null
+---
+>    Assign b (Unop ! a)
+>    Assign c (Binop || (Binop && a b) a)
+>    If c
+15c15
+<    Print ()
+---
+>    Print x

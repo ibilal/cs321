@@ -1,0 +1,173 @@
+  private static boolean isSpace(int c) {
+    return (c == ' ' || c == '\t' || c == '\r');
+  }
+
+  private static boolean isLetter(int c) {
+    return ('a' <= c && c <= 'z');
+  }
+
+  private static boolean isDigit(int c){
+    return ('0' <= c && c <= '9');
+  }
+
+
+
+  private static int nextChar() throws Exception {
+    int c = input.read();
+    if (c != -1)
+      pos++;
+    return c;
+  }
+
+
+  // Return next token (the main lexer routine)
+  //
+  static Token nextToken() throws Exception {
+    int c = nextChar();
+    while (isSpace(c))
+      c = nextChar();
+    switch (c) {
+    case '|':  return new Token(TokenCode.ALTER, (char)c, pos);
+    case '*':  return new Token(TokenCode.REPEAT, (char)c, pos);
+    case '(':  return new Token(TokenCode.LPAREN, (char)c, pos);
+    case ')':  return new Token(TokenCode.RPAREN, (char)c, pos);
+    case '\n': return new Token(TokenCode.END, (char)c, pos);
+    case '+': return new Token(TokenCode.ONEMORE, (char)c, pos);
+    case '?': return new Token(TokenCode.ZEROONE, (char)c, pos);
+    }      
+    if (isLetter(c))
+      return new Token(TokenCode.LETTER, (char)c, pos);
+    if (isDigit(c))
+        return new Token(TokenCode.DIGIT, (char)c, pos);
+
+    throw new Exception("Lexical Error at column " + pos + 
+			": Illegal character " + ((c==-1)? "EOF" : (char)c));
+  }
+
+
+
+From lab 2:
+  static Token nextToken() throws Exception {
+    int c = nextChar();
+    // skip whitespace
+    while (isSpace(c))
+      c = nextChar();
+    // recognize letter chars
+    if (isLetter(c)) {
+      return new Token(TokenCode.LTTR, "" + (char)c, pos);
+    } 
+    // recognize operators and delimiters
+    switch (c) {
+    case '\n': 
+      return new Token(TokenCode.END, "\n", pos);
+    case '+': 
+      return new Token(TokenCode.ADD, "+", pos);
+    case '-': 
+      return new Token(TokenCode.SUB, "-", pos);
+    case '=':  
+      if (nextC == '=') {
+	c = nextChar();
+	return new Token(TokenCode.EQ, "==", pos);
+      }
+      return new Token(TokenCode.ASSGN, "=", pos);
+    case '<':  
+      if (nextC == '=') {
+	c = nextChar();
+	return new Token(TokenCode.LE, "<=", pos);
+      }
+      else if(nextC == '<'){
+          c = nextChar();
+          if(nextC == '='){
+            c = nextChar();
+            return new Token(TokenCode.LESSLESSEQ, "<<=", pos);
+          }
+          return new Token(TokenCode.LESSLESS, "<<", pos);
+      }
+      return new Token(TokenCode.LT, "<", pos);
+    case '>':  
+      if (nextC == '=') {
+	c = nextChar();
+	return new Token(TokenCode.RE, ">=", pos);
+      }
+      else if(nextC == '>'){
+          c = nextChar();
+          if(nextC == '='){
+            c = nextChar();
+            return new Token(TokenCode.GRTGRTEQ, ">>=", pos);
+          }
+          return new Token(TokenCode.GRTGRT, ">>", pos);
+      }
+
+      return new Token(TokenCode.RT, ">", pos);
+    }      
+    throw new Exception("Lexical Error at column " + pos + 
+			": Illegal character " + (char)c);
+  }
+
+
+
+From lab 3:
+  static Token nextToken() throws Exception {
+    int c = nextChar();
+    // skip whitespace
+    while (isSpace(c))
+      c = nextChar();
+    // recognize integer literals
+    if (isDigit(c)) {
+      StringBuilder buffer = new StringBuilder(); 
+      buffer.append((char) c);
+      while (isDigit(nextC)) {
+	c = nextChar();
+	buffer.append((char) c);
+      }
+      String lex = buffer.toString();
+      // catch ill-formed literals
+      //Adding in my code now
+      
+        //Check if it is octal (Begins with 0)
+      if(lex.substring(0,1).equals("0"))
+      {
+          if(lex.substring(1,2).equalsIgnoreCase("x")){
+              try {
+                Integer.parseInt(lex, 16); 
+                return new Token(TokenCode.INTHEX, lex, pos);
+              }
+              catch (Exception e) { 
+                throw new Exception("Lexical Error at column " + pos + 
+                                    ": Invalid hexidecimal integer literal " + lex);
+              }
+          }
+          else{
+              try {
+                Integer.parseInt(lex, 8); 
+                return new Token(TokenCode.INTOCT, lex, pos);
+              }
+              catch (Exception e) { 
+                throw new Exception("Lexical Error at column " + pos + 
+                                    ": Invalid octal integer literal " + lex);
+              }
+          }
+      }
+      else{
+          try {
+            Integer.parseInt(lex); 
+            return new Token(TokenCode.INTLIT, lex, pos);
+          }
+          catch (Exception e) { 
+            throw new Exception("Lexical Error at column " + pos + 
+                                ": Invalid integer literal " + lex);
+          }
+      }
+    }
+    // recognize <EOL>
+    if (c == '\n')
+      return new Token(TokenCode.END, "\n", pos);
+    throw new Exception("Lexical Error at column " + pos + 
+			": Illegal character " + (char)c);
+
+  }
+
+  private static boolean isLetter(int c) {
+    return ('a' <= c && c <= 'z');
+  }
+

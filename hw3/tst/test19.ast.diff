@@ -1,0 +1,18 @@
+11c11
+<    If (Binop > null 0)
+---
+>    If (Binop > n 0)
+13,14c13,14
+<      Print ()
+<      Assign i (Call This back ((Binop - null 1) ))
+---
+>      Print n
+>      Assign i (Call This back ((Binop - n 1) ))
+16c16
+<    Return ()
+---
+>    Return i
+18c18
+<    VarDecl IntType i (Call This go (null ))
+---
+>    VarDecl IntType i (Call This go (n ))

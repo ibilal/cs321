@@ -1,0 +1,10 @@
+7,8c7,8
+<    Assign j (Binop + null 2)
+<    Return ()
+---
+>    Assign j (Binop + i 2)
+>    Return j
+12c12
+<    Print ()
+---
+>    Print r

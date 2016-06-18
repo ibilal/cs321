@@ -1,0 +1,5 @@
+3a4,7
+>    VarDecl Double a 3.14
+>    VarDecl Double b 0.123
+>    VarDecl Double c 55.0
+>    Print (Binop + (Binop + a b) c)

@@ -1,0 +1,12 @@
+18,19c18,19
+<    If null
+<     Assign k null
+---
+>    If cond
+>     Assign k i
+21,22c21,22
+<     Assign k null
+<    Return ()
+---
+>     Assign k j
+>    Return k

@@ -1,0 +1,10 @@
+# AST Program
+ClassDecl Test 
+  VarDecl IntType i 2
+  VarDecl IntType j ()
+  VarDecl IntType k 3
+  MethodDecl void main ()
+   VarDecl (ObjType Test) x (NewObj Test)
+   Print ()
+   Print ()
+   Print ()

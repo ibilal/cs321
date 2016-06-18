@@ -1,0 +1,192 @@
+// This is supporting software for CS321/CS322 Compilers and Language Design.
+// Copyright (c) Portland State University.
+//---------------------------------------------------------------------------
+// For CS321 F'15 (J. Li).
+//
+
+//  Iman Bilal
+//  JavaCC Lexer
+//  Homework 1
+//  Late Days Used: 1
+
+// A lexer for operators -- handling common prefix. (JavaCC version)
+//
+// Tokens:
+//   <CLASS: 'class'>
+//   <EXTENDS: 'extends'>
+//   <STATIC: 'static'>
+//   <STRING: 'String'>
+//   <PUBLIC: 'public'>
+//   <MAIN: 'main'>
+//   <VOID: 'void'>
+//   <BOOLEANS: 'boolean'>
+//   <INT: 'int'>
+//   <DOUBLE: 'double'>
+//   <STRING: (["a"-"z"]["A"-"Z"])+ (["a"-"z"]["A"-"Z"]["0"-"9"])*>
+//   <TRUE: 'true'>
+//   <FALSE: 'false'>
+//   <NEW: 'new'>
+//   <THIS: 'this'>
+//   <IF: 'if'>
+//   <ELSE: 'else'>
+//   <WHILE: 'while'>
+//   <RETURN: 'return'>
+//   <STYSTEM: 'System'>
+//   <OUT: 'out'>
+//   <PRINTLN: 'println'>
+//   <ID:  (["a"-"z"])+ (["a"-"z"]["A"-"Z"]["0"-"9"])*> 
+//   <ADD:   "+">
+//   <SUB:   "-">
+//   <ASSGN: "=">
+//   <EQ:    "==">
+//   <LT:    '<'>
+//   <LE:    "<=">
+//   <RT:    '>'>
+//   <RE:    ">=">
+//   <END:   '\n'>
+//   <LT: "<">
+//   <LE: "<=">
+//   <GT: ">">
+//   <GE: ">=">
+//   <OR:  '||'>
+//   <DOT: '.'>
+//   <COMMA: ','>
+//   <SEMI: ';'>
+//   <NOT: '!'>
+//   <NE: '!='>
+//   <AND: '&&'>
+//   <LPAREN: '('>
+//   <RPAREN: ')'>
+//   <LBRAC: '['>
+//   <RBRAC: ']'>
+//   <LCURLY: '{'>
+//
+PARSER_BEGIN(Lexer2)
+public class Lexer2 {} 
+PARSER_END(Lexer2)
+
+// Token Definitions
+//
+SKIP:   {  "\n" | " " | "\t" | "\r"}        	// whitespace chars
+SKIP:   { < "//" (~["\n", "\r"])* ("\n" | "\r" | "\r\n")> }
+SKIP:   { < "/*" ((((~["/" , "*"])(~["*"])*)* "*")*)* ("/") >}
+
+// ... add code here ...
+TOKEN:  { <CLASS: "class"> }
+TOKEN:  { <EXTENDS: "extends"> }
+TOKEN:  { <STATIC: "static"> }
+TOKEN:  { <PUBLIC: "public"> }
+TOKEN:  { <MAIN: "main"> }
+TOKEN:  { <VOID: "void"> }
+TOKEN:  { <BOOLEAN: "boolean"> }
+TOKEN:  { <INT: "int"> }
+TOKEN:  { <DOUBLE: "double"> }
+TOKEN:  { <STRING: "String"> }
+TOKEN:  { <TRUE: "true"> }
+TOKEN:  { <FALSE: "false"> }
+TOKEN:  { <NEW: "new"> }
+TOKEN:  { <THIS: "this"> }
+TOKEN:  { <IF: "if"> }
+TOKEN:  { <ELSE: "else"> }
+TOKEN:  { <WHILE: "while"> }
+TOKEN:  { <RETURN: "return"> }
+TOKEN:  { <SYSTEM: "System"> }
+TOKEN:  { <OUT: "out"> }
+TOKEN:  { <PRINTLN: "println"> }
+TOKEN:  { <ID:  ["a"-"z"](["0"-"9","a"-"z","A"-"Z"])* | ["A"-"Z"](["0"-"9","a"-"z","A"-"Z"])*> }    
+TOKEN:  { <STRLIT: ["\""] (~["\""] )* (["\""])? > {
+        int length = String.valueOf(matchedToken.image).length();
+        if(length > 0 && !String.valueOf(matchedToken.image).substring(length -1, length).equals("\""))
+        throw new LexicalError("at (" + matchedToken.beginLine + "," + matchedToken.beginColumn + "). Ill-formed or unclosed string: " + matchedToken.image, 0);
+        else if(String.valueOf(matchedToken.image).contains("\r")){
+            String [] something = String.valueOf(matchedToken.image).split("\r");
+        throw new LexicalError("at (" + matchedToken.beginLine + "," + matchedToken.beginColumn + "). Ill-formed or unclosed string: " + something[0], 0);}
+
+}}
+TOKEN:  { <ADD: "+"> }
+TOKEN:  { <SUB: "-"> }
+TOKEN:  { <MUL: "*"> }
+TOKEN:  { <DIV: "/"> }
+TOKEN:  { <AND: "&&"> }
+TOKEN:  { <OR: "||"> }
+TOKEN:  { <NOT: "!"> }
+TOKEN:  { <EQ: "=="> }
+TOKEN:  { <NE: "!="> }
+TOKEN:  { <LT: "<"> }
+TOKEN:  { <LE: "<="> }
+TOKEN:  { <GT: ">"> }
+TOKEN:  { <GE: ">="> }
+TOKEN:  { <ASSGN: "="> }
+TOKEN:  { <SEMI: ";"> }
+TOKEN:  { <COMMA: ","> }
+TOKEN:  { <DOT: "."> }
+TOKEN:  { <LPAREN: "("> }
+TOKEN:  { <RPAREN: ")"> }
+TOKEN:  { <LBRAC: "["> }
+TOKEN:  { <RBRAC: "]"> }
+TOKEN:  { <LCURLY: "{"> }
+TOKEN:  { <RCURLY: "}"> }
+TOKEN:  { <INTLIT: "0x"(["0"-"9", "A"-"F", "a"-"f"])* | "0X"(["0"-"9","a"-"f","A"-"F"])* | (["1"-"9"](["0"-"9"])* | "0" ) | "0"(["0"-"7"])*> {
+                                if((String.valueOf(matchedToken.image).length() >= 2) && (String.valueOf(matchedToken.image).substring(0,2).equals("0X") || 
+                                    String.valueOf(matchedToken.image).substring(0,2).equals("0x"))){
+                                        try { Integer.parseInt(String.valueOf(matchedToken.image).substring(2), 16); }
+                                        catch (Exception e) { 
+                                                throw new LexicalError("at (" +
+                                                        matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                                                         "). Invalid hexadecimal literal: " + 
+                                                         String.valueOf(matchedToken.image), 0);
+                                        }
+                                }
+                                else if(String.valueOf(matchedToken.image).startsWith("0")){
+                                    if(String.valueOf(matchedToken.image).length() == 1)
+                                    {  
+                                        try { Integer.parseInt(String.valueOf(matchedToken.image)); }
+                                        catch (Exception e) { 
+                                                throw new LexicalError("at (" +
+                                                        matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                                                         "). Invalid decimal literal: " + 
+                                                         String.valueOf(matchedToken.image), 0);
+                                        }
+                                    }
+                                    else{
+                                    
+                                        try { Integer.parseInt(String.valueOf(matchedToken.image), 8); }
+                                        catch (Exception e) { 
+                                                throw new LexicalError("at (" +
+                                                        matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                                                         "). Invalid octal literal: " + 
+                                                         String.valueOf(matchedToken.image), 0);
+                                        }
+                                    }
+                                }
+                                else{
+                                
+                                        try { Integer.parseInt(String.valueOf(matchedToken.image)); }
+                                        catch (Exception e) { 
+                                                throw new LexicalError("at (" +
+                                                        matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                                                         "). Invalid decimal literal: " + 
+                                                         String.valueOf(matchedToken.image), 0);
+                                        }
+                                }
+                        }
+        }
+TOKEN:  { <DBLLIT: ((["0"-"9"])* ["."] (["0"-"9"])+)
+     | ((["0"-"9"])+ ["."] (["0"-"9"])*)>}
+
+TOKEN:   { <ERROR: "/*" (((~["/" , "*"])(~["*"])*)* ("*")*)* >
+{
+    if(true)
+            throw new LexicalError("at (" + matchedToken.beginLine + "," + matchedToken.beginColumn + "). Unclosed comments:" 
+                        + String.valueOf(matchedToken.image), 0);
+    }
+}
+
+
+SPECIAL_TOKEN: /* Catch illegal character */
+{
+
+  <~[]> {if (true) 
+                      throw new LexicalError("at (" + matchedToken.beginLine + "," + matchedToken.beginColumn + "). Illegal character: "                            + matchedToken.image, 0); 
+            }
+} 

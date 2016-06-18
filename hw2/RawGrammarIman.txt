@@ -1,0 +1,112 @@
+// This is supporting software for CS321/CS322 Compilers and Language Design.
+// Copyright (c) Portland State University.
+//---------------------------------------------------------------------------
+// For CS321 F'15 (J. Li).
+//
+
+// A raw grammar for the miniJava language.
+//
+
+Program    -> {ClassDecl}
+
+ClassDecl  -> "class" <ID> ["extends" <ID>] "{" {VarDecl} {MethodDecl} "}"
+
+MethodDecl -> "public" 
+
+MethodDeclExtend  ->  ExtType <ID> "(" [Param {"," Param}] ")" "{" {VarDecl} {Stmt} "}"
+           | "static" "void" "main" "(" "String" "[" "]" <ID> ")" "{" {VarDecl} {Stmt} "}" 
+
+Param      -> Type <ID>
+
+VarDecl    -> Type <ID> ["=" InitExpr] ";"
+
+ExtType    -> Type | "void" 
+
+Type       -> BasicType TypeExtend 
+	   |  <ID>		  // object type
+
+TypeExtend ->                 
+           |  "[" "]"             // array type
+
+BasicType  -> "int" | "double" | "boolean"
+
+Stmt  ->   "{" {Stmt} "}"                         // stmt block
+           |  ExtId "(" [Args] ")" ";"            // call stmt
+           |  Lvalue "=" InitExpr ";"             // assignment
+           |  "if" "(" Expr ")" Stmt ["else" Stmt]    
+           |  "while" "(" Expr ")" Stmt               
+           |  "System" "." "out" "." "println" "(" [PrArg] ")" ";"                
+           |  "return" [Expr] ";"                     
+
+Args       -> Expr {"," Expr}
+
+PrArg      -> Expr | <STRLIT>
+
+InitExpr   -> "new" InitExpreExtend
+	   |  Expr
+
+InitExpreExtend  ->  BasicType "[" <INTLIT> "]"    // new array
+           |         <ID> "(" ")"                  // new object
+
+Expr       ->  (UnOp Expr   |  "(" Expr ")" |  ExtId "(" [Args] ")"  |  Lvalue |  Literal) ExprExtend
+
+ExprExtend  ->  BinOp Expr ExprExtend
+	   |
+
+Lvalue     -> ExtId LvalueExtend
+
+LvalueExtend  ->  
+           |  ”[“ Expr "]"            // array element
+
+ExtId      -> ["this" "."] <ID> {"." <ID>}  // object field or just ID
+
+Literal    -> <INTLIT> | <DBLLIT> | "true" | "false"
+
+BinOp      -> “||” | BinOp2
+
+BinOp2     -> “&&“ | BinOp3
+
+BinOp3     -> ”>=” | BinOp4
+
+BinOp4     -> ”>“ | BinOp5
+
+BinOp5     -> “<=“ | BinOp6
+
+BinOp6     -> “<“ | BinOp7
+
+BinOp7     -> “!=” | BinOp8
+
+BinOp8     -> ”==“ | BinOp9
+
+BinOp9     -> ”-”  | BinOp10
+
+BinOp10    -> ”+” | BinOp11
+
+BinOp11    -> ”/” | BinOp12
+
+BinOp12    -> ”*” 
+
+UnOp       -> "-" | UnOp2
+
+UnOp2      -> ”!”
+
+
+
+
+// Operator associativity and precedence.
+// 
+
+1. The arithmetic and logical binary operators are all left-associative.
+
+2. The operators' precedence is defined by the following table:
+
+     ------------------------
+     new, ()                    // highest
+     [], ., method call
+     -, ! 
+     *, / 
+     +, - 
+     ==, !=,  <, <=,  >, >=
+     &&
+     ||                         // lowest
+     ------------------------

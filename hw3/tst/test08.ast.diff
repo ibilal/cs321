@@ -1,0 +1,6 @@
+11,12c11,12
+<    Assign b (Binop + (ArrayElm a null) (ArrayElm a (Binop + null 1)))
+<    Print ()
+---
+>    Assign b (Binop + (ArrayElm a i) (ArrayElm a (Binop + i 1)))
+>    Print b

@@ -1,0 +1,14 @@
+5c5
+<    Return ()
+---
+>    Return i
+8c8
+<    Return ()
+---
+>    Return x
+15,16c15,16
+<    Print ()
+<    Print ()
+---
+>    Print i
+>    Print j

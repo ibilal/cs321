@@ -1,0 +1,8 @@
+6,8c6,8
+<    Print ()
+<    Print ()
+<    Print ()
+---
+>    Print (Field x i) 
+>    Print (Field y i) 
+>    Print (Field y j) 

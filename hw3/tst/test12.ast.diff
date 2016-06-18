@@ -1,0 +1,8 @@
+5c5
+<    Return ()
+---
+>    Return i
+9c9
+<    Print ()
+---
+>    Print (Field x foo) 

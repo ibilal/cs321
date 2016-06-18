@@ -1,0 +1,6 @@
+8,9c8,9
+<    Assign (Field x j)  (Binop + null 2)
+<    Print ()
+---
+>    Assign (Field x j)  (Binop + (Field x i)  2)
+>    Print (Field x j) 
